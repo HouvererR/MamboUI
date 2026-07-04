@@ -1,0 +1,146 @@
+-- ============================================================
+-- Mambo UI — Full Feature Usage Example
+-- Demonstrates every currently implemented public API surface.
+-- ============================================================
+
+local MamboUI = loadstring(game:HttpGet("PATH_TO_MAMBOUI_SOURCE"))()
+
+-- ============================================================
+-- WHITELIST / PREMIUM ACCESS
+-- Populate before CreateWindow/CreateTab so locked tabs resolve
+-- whitelisted status correctly for the local player.
+-- ============================================================
+MamboUI.WhitelistedUsers = {
+    "YourUsernameHere",
+    "AnotherWhitelistedUser",
+}
+
+-- ============================================================
+-- WINDOW
+-- ============================================================
+local Window = MamboUI:CreateWindow({
+    Title = "Mambo UI Showcase",
+    Subtitle = "Official Example Script",
+    SubtitleColor = Color3.fromRGB(190, 140, 255),
+
+    -- Minimized "sphere" launcher appearance
+    SphereText = false,
+    SphereWords = "MU",
+    SphereImage = "rbxassetid://6031280882",
+    SphereIconSize = 26,
+
+    -- Topbar logo
+    Logo = "rbxassetid://6031280882",
+    LogoSize = 32,
+})
+
+-- ============================================================
+-- MAIN TAB
+-- CreateTab supports both the legacy positional signature and
+-- the table signature with Icon / Default / Locked fields.
+-- ============================================================
+local MainTab = Window:CreateTab({
+    Title = "Main",
+    Icon = "search", -- built-in registered icon name
+    Default = true,
+})
+
+local MainPage = MainTab:CreatePage("Overview")
+local GeneralSection = MainPage:CreateSection("General")
+
+GeneralSection:AddButton("Print Hello", function()
+    print("Hello from Mambo UI!")
+end)
+
+GeneralSection:AddCopyButton("Copy Discord Invite", "https://discord.gg/example")
+
+GeneralSection:AddToggle("Enable Feature", false, function(state)
+    print("Enable Feature ->", state)
+end, {
+    Title = "Enable Feature",
+    Description = "Toggles the example feature on or off.",
+})
+
+GeneralSection:AddSlider("Walkspeed", 16, 100, 16, function(value)
+    print("Walkspeed ->", value)
+end, {
+    Title = "Walkspeed",
+    Description = "Adjusts the player's walk speed.",
+    Example = "workspace.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value",
+})
+
+local BehaviorSection = MainPage:CreateSection("Behavior")
+
+BehaviorSection:AddDropdown("Single Select Mode", {"Legit", "Assist", "Rage"}, false, function(selected)
+    print("Mode ->", selected)
+end)
+
+BehaviorSection:AddDropdown("Multi Select Targets", {"Head", "Torso", "Limbs"}, true, function(selected)
+    print("Targets ->", selected)
+end)
+
+BehaviorSection:AddTextbox("Player Name", "Enter a username...", function(text)
+    print("Player Name ->", text)
+end)
+
+BehaviorSection:AddKeybind("Toggle Menu Key", Enum.KeyCode.RightControl, function(keyCode)
+    print("Menu Keybind set to ->", keyCode)
+end)
+
+BehaviorSection:AddColorPicker("Highlight Color", Color3.fromRGB(190, 140, 255), function(color)
+    print("Highlight Color ->", color)
+end)
+
+-- ============================================================
+-- SETTINGS TAB
+-- ============================================================
+local SettingsTab = Window:CreateTab({
+    Title = "Settings",
+    Icon = "lock", -- built-in registered icon name
+})
+
+local SettingsPage = SettingsTab:CreatePage("Configuration")
+local ConfigSection = SettingsPage:CreateSection("Saves")
+
+-- Config Manager: create/load/edit/delete saved configs from a folder.
+-- Any element registered above with a Set/Get pair (Toggle, Slider,
+-- Dropdown, Textbox, Keybind, ColorPicker) is automatically included.
+ConfigSection:AddConfigManager("MamboUIExample")
+
+local WindowSection = SettingsPage:CreateSection("Window")
+
+WindowSection:AddSlider("UI Transparency", 0, 1, 0, function(value)
+    Window:SetTransparency(value)
+end)
+
+-- ============================================================
+-- PREMIUM TAB
+-- Locked = true gates the tab behind Library.WhitelistedUsers.
+-- Non-whitelisted users clicking this tab see the built-in
+-- "ACCESS DENIED" premium notification instead of the tab content.
+-- ============================================================
+local PremiumTab = Window:CreateTab({
+    Title = "Premium",
+    Icon = "rbxassetid://6031280882", -- direct asset id also accepted by IconProvider
+    Locked = true,
+})
+
+local PremiumPage = PremiumTab:CreatePage("Exclusive")
+local PremiumSection = PremiumPage:CreateSection("Premium Features")
+
+PremiumSection:AddButton("Unlock Feature X", function()
+    print("Premium feature triggered")
+end, {
+    Title = "Feature X",
+    Description = "An example feature only available to whitelisted users.",
+})
+
+-- ============================================================
+-- GLOBAL NOTIFICATIONS
+-- Can be called from anywhere at any time.
+-- ============================================================
+MamboUI:Notify({
+    Title = "Welcome",
+    Description = "Mambo UI has loaded successfully.",
+    Duration = 4,
+})
