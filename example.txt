@@ -3,7 +3,7 @@
 -- Demonstrates every currently implemented public API surface.
 -- ============================================================
 
-local MamboUI = loadstring(game:HttpGet("PATH_TO_MAMBOUI_SOURCE"))()
+local MamboUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/HouvererR/MamboUI/refs/heads/main/source.lua"))()
 
 -- ============================================================
 -- WHITELIST / PREMIUM ACCESS
